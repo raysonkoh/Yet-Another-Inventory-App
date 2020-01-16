@@ -1,8 +1,25 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Table, Divider, Tag} from 'antd';
+import {Modal, Button, Table, Divider, Tag} from 'antd';
 import customAxios from '../helpers/customAxios';
 
 function Dashboard(props) {
+  const onClickDelete = (e, name) => {
+    const {confirm} = Modal;
+    confirm({
+      title: `Confirm delete ${name}?`,
+      content: 'DELETION IS IRREVIRSIBLE',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        console.log(`OK DELETE ${name}`);
+      },
+      onCancel() {
+        console.log(`CANCEL DELETE ${name}`);
+      },
+    });
+  };
+
   const columns = [
     {
       title: 'Category',
@@ -32,63 +49,40 @@ function Dashboard(props) {
         <span>
           <Button type="primary">Modify {record.name}</Button>
           <Divider type="vertical" />
-          <Button type="danger">Delete</Button>
+            <Button type="danger" onClick={e => onClickDelete(e,record.name)}>
+            Delete
+          </Button>
         </span>
       ),
     },
   ];
 
-    const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
-    useEffect(() => {
-        customAxios.get('inventory/findCategories')
-            .then(res => {
-                const catArr = res.data.catArr;
-                const temp = [];
-                let index = 0;
-                catArr.forEach(cat => {
-                    const { itemArr, name } = cat;
-                    itemArr.forEach(item => {
-                        temp.push({
-                            key: index,
-                            name: item.name,
-                            itemDescription: item.description,
-                            itemQty: item.quantity,
-                            category: name
-                        });
-                        index++;
-                    });
-                })
-                setData(temp);
-            })
-            .catch(err => console.log(err));
-    }, []);
-
-    /*
-  const data = [
-    {
-      key: '1',
-      category: 'Food',
-      name: 'fries',
-      itemDescription: 'fried potatoes',
-      itemQty: 10,
-    },
-    {
-      key: '2',
-      category: 'Food',
-      name: 'burger',
-      itemDescription: 'bread with patty',
-      itemQty: 10,
-    },
-    {
-      key: '3',
-      category: 'Furniture',
-      name: 'chair',
-      itemDescription: 'something to sit on',
-      itemQty: 10,
-    },
-  ];
-    */
+  useEffect(() => {
+    customAxios
+      .get('inventory/category/all')
+      .then(res => {
+        const catArr = res.data.catArr;
+        const temp = [];
+        let index = 0;
+        catArr.forEach(cat => {
+          const {itemArr, name} = cat;
+          itemArr.forEach(item => {
+            temp.push({
+              key: index,
+              name: item.name,
+              itemDescription: item.description,
+              itemQty: item.quantity,
+              category: name,
+            });
+            index++;
+          });
+        });
+        setData(temp);
+      })
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <div>
