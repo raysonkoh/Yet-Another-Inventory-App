@@ -11,7 +11,7 @@ const CategorySchema = new Schema({
     type: String,
     required: true,
   },
-  ItemArr: {
+  itemArr: {
     type: Array,
     default: [],
   },

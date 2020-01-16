@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 //TODO: add item history / logs
 const InventorySchema = new Schema({
-  CatArr: {
+  catArr: {
     type: Array,
     default: [],
   },
