@@ -32,7 +32,7 @@ itemRoutes.post('/new', (req, res) => {
     quantity: itemQuantity,
   });
 
-  Category.findById({id: catId})
+  Category.findById(catId)
     .then(cat => {
       if (!cat) {
         res.status(400).json({

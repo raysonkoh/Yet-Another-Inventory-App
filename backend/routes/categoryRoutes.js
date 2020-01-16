@@ -3,6 +3,27 @@ const categoryRoutes = express.Router();
 const Category = require('../models/Category');
 const Item = require('../models/Item');
 
+categoryRoutes.delete('/delete', (req, res) => {
+  const {catId, itemId} = req.body;
+  Category.findById(catId)
+    .then(cat => {
+      Item.findByIdAndDelete(itemId).then(() => {
+        for (let i = 0; i < cat.itemArr.length; i++) {
+            console.log(cat.itemArr[i]._id);
+          if (cat.itemArr[i]._id == itemId) {
+            cat.itemArr.splice(i, 1);
+            break;
+          }
+        }
+          cat.save();
+        res.status(200).json({
+          msg: 'Successfully deleted item!',
+        });
+      });
+    })
+    .catch(err => console.log(err));
+});
+
 // find all categories available
 categoryRoutes.get('/all', (req, res) => {
   Category.find({})

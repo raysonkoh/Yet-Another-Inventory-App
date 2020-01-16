@@ -6,6 +6,6 @@ const categoryRoutes = require('./categoryRoutes');
 const itemRoutes = require('./itemRoutes');
 
 inventoryRoutes.use('/category', categoryRoutes);
-inventoryRoutes.use('/items', itemRoutes);
+inventoryRoutes.use('/item', itemRoutes);
 
 module.exports = inventoryRoutes;
