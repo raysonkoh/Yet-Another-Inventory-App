@@ -1,80 +1,95 @@
-import React from 'react';
-import {Table, Divider, Tag} from 'antd';
+import React, {useState, useEffect} from 'react';
+import {Button, Table, Divider, Tag} from 'antd';
+import customAxios from '../helpers/customAxios';
 
 function Dashboard(props) {
   const columns = [
     {
-      title: 'Namee',
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+      render: text => <a>{text}</a>,
+    },
+    {
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: text => <a href="/">{text}</a>,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Item Description',
+      dataIndex: 'itemDescription',
+      key: 'itemDescription',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <span>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </span>
-      ),
+      title: 'Item Quantity',
+      dataIndex: 'itemQty',
+      key: 'itemQty',
     },
     {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
         <span>
-          <a href="/">Invite {record.name}</a>
+          <Button type="primary">Modify {record.name}</Button>
           <Divider type="vertical" />
-          <a href="/">Delete</a>
+          <Button type="danger">Delete</Button>
         </span>
       ),
     },
   ];
 
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        customAxios.get('inventory/findCategories')
+            .then(res => {
+                const catArr = res.data.catArr;
+                const temp = [];
+                let index = 0;
+                catArr.forEach(cat => {
+                    const { itemArr, name } = cat;
+                    itemArr.forEach(item => {
+                        temp.push({
+                            key: index,
+                            name: item.name,
+                            itemDescription: item.description,
+                            itemQty: item.quantity,
+                            category: name
+                        });
+                        index++;
+                    });
+                })
+                setData(temp);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
+    /*
   const data = [
     {
       key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
+      category: 'Food',
+      name: 'fries',
+      itemDescription: 'fried potatoes',
+      itemQty: 10,
     },
     {
       key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
+      category: 'Food',
+      name: 'burger',
+      itemDescription: 'bread with patty',
+      itemQty: 10,
     },
     {
       key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
+      category: 'Furniture',
+      name: 'chair',
+      itemDescription: 'something to sit on',
+      itemQty: 10,
     },
   ];
+    */
+
   return (
     <div>
       THIS IS THE DASHBOARD!

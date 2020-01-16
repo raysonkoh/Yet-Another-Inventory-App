@@ -41,6 +41,18 @@ inventoryRoutes.get('/findCategory/:categoryName', (req, res) => {
     .catch(err => console.log(err));
 });
 
+// find all categories available
+inventoryRoutes.get('/findCategories', (req, res) => {
+  Category.find({})
+    .then(catArr =>
+      res.status(200).json({
+        msg: 'Successfully fetched all categories!',
+        catArr,
+      }),
+    )
+    .catch(err => console.log(err));
+});
+
 // new item in a new category
 inventoryRoutes.post('/new', (req, res) => {
   const {

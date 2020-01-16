@@ -7,7 +7,6 @@ import SearchPage from './pages/SearchPage';
 function App() {
   return (
       <BrowserRouter>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <Route exact path='/' component={Dashboard} />
           <Route exact path='/search' component={SearchPage} />
           <Route exact path='/admin' component={AdminPage} />
