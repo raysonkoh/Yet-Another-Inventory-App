@@ -9,13 +9,19 @@ categoryRoutes.delete('/delete', (req, res) => {
     .then(cat => {
       Item.findByIdAndDelete(itemId).then(() => {
         for (let i = 0; i < cat.itemArr.length; i++) {
-            console.log(cat.itemArr[i]._id);
+          console.log(cat.itemArr[i]._id);
           if (cat.itemArr[i]._id == itemId) {
             cat.itemArr.splice(i, 1);
             break;
           }
         }
+
+        if (cat.itemArr.length === 0) {
+          cat.remove();
+        } else {
           cat.save();
+        }
+
         res.status(200).json({
           msg: 'Successfully deleted item!',
         });
@@ -63,7 +69,7 @@ categoryRoutes.post('/new', (req, res) => {
     itemName,
     itemDescription,
     itemQuantity,
-  } = req.body;
+  } = req.body.data;
 
   const newItem = new Item({
     name: itemName,

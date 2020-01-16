@@ -5,7 +5,8 @@ import CreateItemForm from '../components/CreateItemForm';
 
 function Dashboard(props) {
   const [data, setData] = useState([]);
-  const [displayCreateForm, setDisplayCreateForm] = useState(true);
+  const [displayCreateForm, setDisplayCreateForm] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
   const onClickDelete = (e, itemId, catId, name) => {
     const {confirm} = Modal;
@@ -16,6 +17,7 @@ function Dashboard(props) {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
+          setIsDeleting(true);
         customAxios
           .delete('inventory/category/delete', {
             headers: {'Content-Type': 'application/json'},
@@ -30,6 +32,7 @@ function Dashboard(props) {
             } else {
               console.log(res.msg);
             }
+          setIsDeleting(false);
           })
           .catch(err => console.log(err));
       },
@@ -105,7 +108,7 @@ function Dashboard(props) {
         setData(temp);
       })
       .catch(err => console.log(err));
-  }, []);
+  }, [displayCreateForm, isDeleting]);
 
   return (
     <div>

@@ -24,7 +24,7 @@ itemRoutes.get('/find/:itemId', (req, res) => {
 
 // new item in an existing category
 itemRoutes.post('/new', (req, res) => {
-  const {catId, itemName, itemDescription, itemQuantity} = req.body;
+  const {catId, itemName, itemDescription, itemQuantity} = req.body.data;
 
   const newItem = new Item({
     name: itemName,
