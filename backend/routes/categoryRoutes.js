@@ -30,6 +30,49 @@ categoryRoutes.delete('/delete', (req, res) => {
     .catch(err => console.log(err));
 });
 
+// modify an item (name, description or quantity)
+categoryRoutes.patch('/modify', (req, res) => {
+  const {
+    catId,
+    itemId,
+    newItemName,
+    newItemDescription,
+    newItemQty,
+  } = req.body.data;
+
+  Category.findById(catId)
+    .then(cat => {
+      Item.findById(itemId).then(item => {
+        if (!item) {
+          res.status(400).json({
+            msg: 'invalid item',
+          });
+        } else {
+          item.name = newItemName;
+          item.description = newItemDescription;
+          item.quantity = newItemQty;
+          item.dateLastUpdated = Date.now();
+          item.save().then(() => {
+            for (let i = 0; i < cat.itemArr.length; i++) {
+                
+              if (cat.itemArr[i]._id == itemId) {
+                cat.itemArr.set(i, item);
+                break;
+              }
+            }
+
+            cat.save().then(
+              res.status(200).json({
+                msg: 'Successfully modified item',
+              }),
+            );
+          });
+        }
+      });
+    })
+    .catch(err => console.log(err));
+});
+
 // find all categories available
 categoryRoutes.get('/all', (req, res) => {
   Category.find({})

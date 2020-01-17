@@ -15,6 +15,15 @@ function CreateItemForm(props) {
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState(-1);
 
+  const resetForm = () => {
+    setCategory('');
+    setNewCategoryName('');
+    setNewCategoryDescription('');
+    setItemName('');
+    setItemDescription('');
+    setItemQuantity(-1);
+  };
+
   useEffect(() => {
     customAxios
       .get('inventory/category/all')
@@ -42,6 +51,7 @@ function CreateItemForm(props) {
         .then(res => {
           if (res.status === 200) {
             setIsSuccessful(true);
+            resetForm();
           } else {
             setIsSuccessful(false);
           }
@@ -69,6 +79,7 @@ function CreateItemForm(props) {
         .then(res => {
           if (res.status === 200) {
             setIsSuccessful(true);
+            resetForm();
           } else {
             setIsSuccessful(false);
           }
@@ -96,7 +107,7 @@ function CreateItemForm(props) {
           <Form.Item label="New Category Information" required="true">
             <Input
               value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
+              onChange={e => setNewCategoryName(e.target.value)}
               placeholder="New Category Name"
             />
             <Input

@@ -1,12 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {Modal, Button, Table, Divider} from 'antd';
+import {Form, Input, Drawer, Modal, Button, Table, Divider} from 'antd';
 import customAxios from '../helpers/customAxios';
 import CreateItemForm from '../components/CreateItemForm';
+import ModifyItemForm from '../components/ModifyItemForm';
 
 function Dashboard(props) {
   const [data, setData] = useState([]);
   const [displayCreateForm, setDisplayCreateForm] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+  const [currentlyModifying, setCurrentlyModifying] = useState({
+    isModifying: false,
+    record: null,
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const onClickDelete = (e, itemId, catId, name) => {
     const {confirm} = Modal;
@@ -17,7 +22,7 @@ function Dashboard(props) {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-          setIsDeleting(true);
+        setIsDeleting(true);
         customAxios
           .delete('inventory/category/delete', {
             headers: {'Content-Type': 'application/json'},
@@ -32,7 +37,7 @@ function Dashboard(props) {
             } else {
               console.log(res.msg);
             }
-          setIsDeleting(false);
+            setIsDeleting(false);
           })
           .catch(err => console.log(err));
       },
@@ -40,6 +45,14 @@ function Dashboard(props) {
         console.log(`CANCEL DELETE ${name}`);
       },
     });
+  };
+
+  const onClickModify = (e, record) => {
+    const newObj = {
+      isModifying: true,
+      record: record,
+    };
+    setCurrentlyModifying(newObj);
   };
 
   const columns = [
@@ -69,7 +82,9 @@ function Dashboard(props) {
       key: 'action',
       render: (text, record) => (
         <span>
-          <Button type="primary">Modify {record.name}</Button>
+          <Button type="primary" onClick={e => onClickModify(e, record)}>
+            Modify {record.name}
+          </Button>
           <Divider type="vertical" />
           <Button
             type="danger"
@@ -134,6 +149,17 @@ function Dashboard(props) {
             Add New Item
           </Button>
           <Table columns={columns} dataSource={data} />
+          <ModifyItemForm
+            record={currentlyModifying.record}
+            visible={currentlyModifying.isModifying}
+            onClose={e => {
+              const newObj = {
+                isModifying: false,
+                record: null,
+              };
+              setCurrentlyModifying(newObj);
+            }}
+          />
         </div>
       )}
     </div>
