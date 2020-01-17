@@ -9,7 +9,6 @@ categoryRoutes.delete('/delete', (req, res) => {
     .then(cat => {
       Item.findByIdAndDelete(itemId).then(() => {
         for (let i = 0; i < cat.itemArr.length; i++) {
-          console.log(cat.itemArr[i]._id);
           if (cat.itemArr[i]._id == itemId) {
             cat.itemArr.splice(i, 1);
             break;

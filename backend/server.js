@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const port = process.env.PORT || 5000;
 const inventoryRoutes = require('./routes/inventoryRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const {mongoURI} = require('./config/keys');
 
@@ -15,6 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use('/auth', authRoutes);
 app.use('/inventory', inventoryRoutes);
 // implement JWT TOKEN AUTH
 //app.use('/auth', authRoutes);
