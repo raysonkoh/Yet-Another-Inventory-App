@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Form, Input, Drawer, Modal, Button, Table, Divider} from 'antd';
+import {UserContext} from '../contexts/UserContext';
 import customAxios from '../helpers/customAxios';
 import CreateItemForm from '../components/CreateItemForm';
 import ModifyItemForm from '../components/ModifyItemForm';
 import NavBar from '../components/NavBar';
 
 function Dashboard(props) {
+  const [user, customSetUser] = useContext(UserContext);
   const [data, setData] = useState([]);
   const [displayCreateForm, setDisplayCreateForm] = useState(false);
   const [currentlyModifying, setCurrentlyModifying] = useState({
@@ -145,7 +147,7 @@ function Dashboard(props) {
         </div>
       ) : (
         <div style={{padding: '2em'}}>
-          <h1>WELCOME</h1>
+          <h1>WELCOME {user.name}!</h1>
           <Button
             type="primary"
             icon="plus"

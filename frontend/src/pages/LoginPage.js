@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, {useState, useContext} from 'react';
+import {Link, useHistory, Redirect} from 'react-router-dom';
 import {Form, Icon, Input, Button, Checkbox} from 'antd';
 import customAxios from '../helpers/customAxios';
+import {UserContext} from '../contexts/UserContext';
 
 function LoginPage(props) {
+  const [user, customSetUser] = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   const submitLogin = e => {
     customAxios
@@ -18,10 +21,10 @@ function LoginPage(props) {
       })
       .then(res => {
         if (res.status === 200) {
-          const token = res.data.token;
-          localStorage.setItem('token', token)
+          const {token, name, email} = res.data;
+          customSetUser(token, name, email);
           console.log('login success');
-            window.location.reload();
+          history.push('/dashboard');
         } else {
           console.log('login failed');
         }
@@ -29,7 +32,9 @@ function LoginPage(props) {
       .catch(err => console.log(err));
   };
 
-  return (
+  return user.token ? (
+    <Redirect to="/dashboard" />
+  ) : (
     <Form style={{padding: '15em'}}>
       <Form.Item label="Email" required="true">
         <Input

@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {UserProvider} from './contexts/UserContext';
+import ProtectedRoutes from './components/ProtectedRoutes';
 import AdminPage from './pages/AdminPage';
 import Dashboard from './pages/Dashboard';
 import SearchPage from './pages/SearchPage';
@@ -10,19 +12,21 @@ function App() {
   useEffect(() => {
     document.title = "RAY' AWESOME INVENTORY";
   }, []);
-  const token = localStorage.getItem('token');
 
   return (
-    <BrowserRouter>
-      {token ? (
-        <Route exact path="/" component={Dashboard} />
-      ) : (
-        <Route exact path="/" component={LoginPage} />
-      )}
-      <Route exact path="/register" component={RegisterPage} />
-      <Route exact path="/search" component={SearchPage} />
-      <Route exact path="/admin" component={AdminPage} />
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={LoginPage} />
+          <ProtectedRoutes>
+            <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/register" component={RegisterPage} />
+            <Route exact path="/search" component={SearchPage} />
+            <Route exact path="/admin" component={AdminPage} />
+          </ProtectedRoutes>
+        </Switch>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 

@@ -25,6 +25,8 @@ authRoutes.post('/login', (req, res) => {
             );
             res.status(200).json({
               msg: 'Found user',
+              name: user.name,
+              email: user.email,
               token,
             });
           } else {
