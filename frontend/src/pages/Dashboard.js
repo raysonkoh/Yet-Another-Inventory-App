@@ -82,7 +82,10 @@ function Dashboard(props) {
       key: 'action',
       render: (text, record) => (
         <span>
-          <Button type="primary" onClick={e => onClickModify(e, record)}>
+          <Button
+            type="primary"
+            onClick={e => onClickModify(e, record)}
+            style={{width: '20em'}}>
             Modify {record.name}
           </Button>
           <Divider type="vertical" />
@@ -123,7 +126,7 @@ function Dashboard(props) {
         setData(temp);
       })
       .catch(err => console.log(err));
-  }, [displayCreateForm, isDeleting]);
+  }, [displayCreateForm, isDeleting, currentlyModifying]);
 
   return (
     <div>

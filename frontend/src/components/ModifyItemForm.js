@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Modal, Button, Form, Drawer, InputNumber, Input} from 'antd';
+import {Alert, Modal, Button, Form, Drawer, InputNumber, Input} from 'antd';
 import customAxios from '../helpers/customAxios';
 
 function ModifyItemForm(props) {
   const [newItemName, setNewItemName] = useState('');
   const [newItemDescription, setNewItemDescription] = useState('');
   const [newItemQty, setNewItemQty] = useState(-1);
+  const [isSuccess, setIsSuccess] = useState(null);
 
   useEffect(() => {
     if (props.record !== null) {
@@ -28,24 +29,25 @@ function ModifyItemForm(props) {
       title: 'Confirm Modifications?',
       content: 'CANNOT UNDO',
       onOk() {
-          customAxios.patch('inventory/category/modify', {
+        customAxios
+          .patch('inventory/category/modify', {
             headers: {'Content-Type': 'application/json'},
             data: {
-                newItemName,
-                newItemDescription,
-                newItemQty,
-                itemId: props.record.itemId,
-                catId: props.record.catId,
+              newItemName,
+              newItemDescription,
+              newItemQty,
+              itemId: props.record.itemId,
+              catId: props.record.catId,
             },
           })
-              .then(res => {
-                if (res.status === 200) {
-                    
-                } else {
-                    
-                }
-              })
-              .catch(err => console.log(err));
+          .then(res => {
+            if (res.status === 200) {
+              setIsSuccess(true);
+            } else {
+              setIsSuccess(false);
+            }
+          })
+          .catch(err => console.log(err));
       },
       onCancel() {
         console.log('CANCEL');
@@ -59,15 +61,30 @@ function ModifyItemForm(props) {
       visible={props.visible}
       onClose={props.onClose}
       width="35%">
+      {(isSuccess && (
+        <Alert type="success" message="Successfully modified item" />
+      )) ||
+        (isSuccess === false && (
+          <Alert
+            type="error"
+            message="An error has occurred. Please try again."
+          />
+        ))}
       <Form>
         <Form.Item label="Item Name">
-            <Input value={newItemName} onChange={e => setNewItemName(e.target.value)}/>
+          <Input
+            value={newItemName}
+            onChange={e => setNewItemName(e.target.value)}
+          />
         </Form.Item>
         <Form.Item label="Item Description">
-            <Input value={newItemDescription} onChange={e => setNewItemDescription(e.target.value)}/>
+          <Input
+            value={newItemDescription}
+            onChange={e => setNewItemDescription(e.target.value)}
+          />
         </Form.Item>
         <Form.Item label="Item Quantity">
-            <InputNumber value={newItemQty} onChange={e => setNewItemQty(e)}/>
+          <InputNumber value={newItemQty} onChange={e => setNewItemQty(e)} />
         </Form.Item>
         <Button size="large" type="primary" onClick={showModifyConfirm}>
           Submit Changes
