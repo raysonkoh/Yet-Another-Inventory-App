@@ -133,7 +133,7 @@ function Dashboard(props) {
     <div>
       <NavBar />
       {displayCreateForm ? (
-        <div style={{padding: '5em'}}>
+        <div style={{padding: '2em'}}>
           <Button
             type="primary"
             icon="close"
@@ -144,7 +144,7 @@ function Dashboard(props) {
           <CreateItemForm />
         </div>
       ) : (
-        <div style={{padding: '5em'}}>
+        <div style={{padding: '2em'}}>
           <h1>WELCOME</h1>
           <Button
             type="primary"
