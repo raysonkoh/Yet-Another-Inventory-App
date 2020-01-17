@@ -96,7 +96,7 @@ function CreateItemForm(props) {
         (isSuccessful === false && (
           <Alert type="error" message="An error occurred. Please try again." />
         ))}
-      <Form style={{padding: '5em', display: 'flex', flexDirection: 'column'}}>
+      <Form style={{display: 'flex', flexDirection: 'column'}}>
         <Form.Item label="Category" required="true">
           <Select value={category} onChange={e => setCategory(e)}>
             {catArr.map(cat => renderOptions(cat))}

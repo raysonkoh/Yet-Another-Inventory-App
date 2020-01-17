@@ -3,6 +3,7 @@ import {Form, Input, Drawer, Modal, Button, Table, Divider} from 'antd';
 import customAxios from '../helpers/customAxios';
 import CreateItemForm from '../components/CreateItemForm';
 import ModifyItemForm from '../components/ModifyItemForm';
+import NavBar from '../components/NavBar';
 
 function Dashboard(props) {
   const [data, setData] = useState([]);
@@ -130,9 +131,9 @@ function Dashboard(props) {
 
   return (
     <div>
-      <div>THIS IS THE DASHBOARD!</div>
+      <NavBar />
       {displayCreateForm ? (
-        <div>
+        <div style={{padding: '5em'}}>
           <Button
             type="primary"
             icon="close"
@@ -143,7 +144,8 @@ function Dashboard(props) {
           <CreateItemForm />
         </div>
       ) : (
-        <div>
+        <div style={{padding: '5em'}}>
+          <h1>WELCOME</h1>
           <Button
             type="primary"
             icon="plus"
