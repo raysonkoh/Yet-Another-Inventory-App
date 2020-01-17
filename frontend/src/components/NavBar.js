@@ -3,13 +3,8 @@ import {Link, useHistory} from 'react-router-dom';
 import {Button, Menu, Icon} from 'antd';
 
 function NavBar(props) {
-    const history = useHistory();
-  const [current, setCurrent] = useState('mail');
-
-  const handleClick = e => {
-    console.log('click ', e);
-    setCurrent(e.key);
-  };
+  const history = useHistory();
+  const [current, setCurrent] = useState(history.location.pathname);
 
   const onLogout = e => {
     localStorage.removeItem('token');
@@ -17,7 +12,7 @@ function NavBar(props) {
   };
 
   return (
-    <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
+    <Menu selectedKeys={current} mode="horizontal">
       <Menu.Item key="dashboard">
         <Link to="/dashboard">
           <Icon type="dashboard" />
