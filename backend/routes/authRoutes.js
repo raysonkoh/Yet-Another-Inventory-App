@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const authRoutes = express.Router();
 const User = require('../models/User');
+const jwtSecret = require('../config/keys').jwtSecret;
 
 authRoutes.post('/login', (req, res) => {
   const {email, password} = req.body.data;
@@ -11,7 +12,6 @@ authRoutes.post('/login', (req, res) => {
       if (user) {
         bcrypt.compare(password, user.password, (err, result) => {
           if (result) {
-            const jwtSecret = require('../config/keys').jwtSecret;
             const token = jwt.sign(
               {
                 data: {
@@ -42,6 +42,24 @@ authRoutes.post('/login', (req, res) => {
       }
     })
     .catch(err => console.log(error));
+});
+
+authRoutes.post('/verify', (req, res) => {
+  const {token} = req.body.data;
+  jwt.verify(token, jwtSecret, (err, decoded) => {
+    if (decoded) {
+      return res.status(200).json({
+        msg: 'User verified!',
+        name: decoded.data.name,
+        email: decoded.data.email,
+        token,
+      });
+    } else {
+      return res.status(401).json({
+        msg: 'Invalid token!',
+      });
+    }
+  });
 });
 
 authRoutes.post('/register', (req, res) => {

@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Link, useHistory, Redirect} from 'react-router-dom';
 import {Form, Icon, Input, Button, Checkbox} from 'antd';
 import customAxios from '../helpers/customAxios';
@@ -6,9 +6,30 @@ import {UserContext} from '../contexts/UserContext';
 
 function LoginPage(props) {
   const [user, customSetUser] = useContext(UserContext);
+  const [isVerified, setIsVerified] = useState(false);
+  const [tokenLocal, setTokenLocal] = useState(localStorage.getItem('token'));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
+
+  useEffect(() => {
+    if (tokenLocal !== null) {
+      customAxios
+        .post('auth/verify', {
+          headers: {'Content-Type': 'application/json'},
+          data: {
+            token: tokenLocal,
+          },
+        })
+        .then(res => {
+          if (res.status === 200) {
+              customSetUser(res.data.token, res.data.name, res.data.email);
+              setIsVerified(true);
+          } 
+        })
+        .catch(err => console.log(err));
+    }
+  }, [tokenLocal]);
 
   const submitLogin = e => {
     customAxios
@@ -32,7 +53,7 @@ function LoginPage(props) {
       .catch(err => console.log(err));
   };
 
-  return user.token ? (
+  return isVerified ? (
     <Redirect to="/dashboard" />
   ) : (
     <Form style={{padding: '15em'}}>

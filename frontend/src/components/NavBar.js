@@ -19,7 +19,7 @@ function NavBar(props) {
   return (
     <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
       <Menu.Item key="dashboard">
-        <Link to="/">
+        <Link to="/dashboard">
           <Icon type="dashboard" />
           Dashboard
         </Link>

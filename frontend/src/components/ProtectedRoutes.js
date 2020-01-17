@@ -4,9 +4,8 @@ import {UserContext} from '../contexts/UserContext';
 
 function ProtectedRoutes(props) {
   const [user, customSetUser] = useContext(UserContext);
-    console.log(user);
-  
-    return user.token ? props.children : <Redirect to='/' />;
+
+  return user.token ? props.children : <Redirect to="/" />;
 }
 
 export default ProtectedRoutes;
