@@ -11,8 +11,21 @@ authRoutes.post('/login', (req, res) => {
       if (user) {
         bcrypt.compare(password, user.password, (err, result) => {
           if (result) {
+            const jwtSecret = require('../config/keys').jwtSecret;
+            const token = jwt.sign(
+              {
+                data: {
+                  userid: user._id,
+                  name: user.name,
+                  email: user.email,
+                },
+              },
+              jwtSecret,
+              {expiresIn: '1h'},
+            );
             res.status(200).json({
               msg: 'Found user',
+              token,
             });
           } else {
             res.status(400).json({

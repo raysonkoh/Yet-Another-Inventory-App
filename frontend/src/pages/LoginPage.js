@@ -18,7 +18,10 @@ function LoginPage(props) {
       })
       .then(res => {
         if (res.status === 200) {
+          const token = res.data.token;
+          localStorage.setItem('token', token)
           console.log('login success');
+            window.location.reload();
         } else {
           console.log('login failed');
         }

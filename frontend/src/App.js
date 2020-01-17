@@ -10,11 +10,15 @@ function App() {
   useEffect(() => {
     document.title = "RAY' AWESOME INVENTORY";
   }, []);
-    const token = localStorage['token'];
+  const token = localStorage.getItem('token');
 
   return (
     <BrowserRouter>
-        {token ? <Route exact path="/" component={Dashboard} /> : <Route exact path='/' component={LoginPage} />}
+      {token ? (
+        <Route exact path="/" component={Dashboard} />
+      ) : (
+        <Route exact path="/" component={LoginPage} />
+      )}
       <Route exact path="/register" component={RegisterPage} />
       <Route exact path="/search" component={SearchPage} />
       <Route exact path="/admin" component={AdminPage} />

@@ -18,7 +18,5 @@ app.use(cors());
 
 app.use('/auth', authRoutes);
 app.use('/inventory', inventoryRoutes);
-// implement JWT TOKEN AUTH
-//app.use('/auth', authRoutes);
 
 app.listen(port, () => console.log(`Server started at port ${port}!`));
