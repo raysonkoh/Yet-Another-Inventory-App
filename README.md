@@ -1,4 +1,4 @@
-#This project was created mainly to practise fullstack development.
+# This project was created mainly to practise fullstack development.
 
 ## TODO:
 ### 1. Some issues with the modify form
