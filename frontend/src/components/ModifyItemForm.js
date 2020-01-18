@@ -5,14 +5,12 @@ import {UserContext} from '../contexts/UserContext';
 
 function ModifyItemForm(props) {
   const [user, customSetUser] = useContext(UserContext);
-  //const [visible, setVisible] = useState(false);
   const [newItemName, setNewItemName] = useState('');
   const [newItemDescription, setNewItemDescription] = useState('');
   const [newItemQty, setNewItemQty] = useState(-1);
 
   useEffect(() => {
     if (props.record !== null) {
-      //setVisible(props.visible);
       setNewItemName(props.record.name);
       setNewItemDescription(props.record.itemDescription);
       setNewItemQty(props.record.itemQty);
@@ -34,7 +32,10 @@ function ModifyItemForm(props) {
       onOk() {
         customAxios
           .patch('inventory/item/modify', {
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+            },
             data: {
               inventoryId: user.inventoryId,
               catId: props.record.catId,

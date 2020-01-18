@@ -2,6 +2,7 @@
 const express = require('express');
 const inventoryRoutes = express.Router();
 const Inventory = require('../models/Inventory');
+const auth = require('../middlewares/auth');
 
 // new inventory
 inventoryRoutes.post('/new', (req, res) => {
@@ -98,7 +99,7 @@ inventoryRoutes.delete('/item/delete', (req, res) => {
 });
 
 // modify an item (name, description or quantity)
-inventoryRoutes.patch('/item/modify', (req, res) => {
+inventoryRoutes.patch('/item/modify', auth, (req, res) => {
   const {
     inventoryId,
     catId,
