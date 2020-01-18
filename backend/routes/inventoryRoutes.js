@@ -22,7 +22,7 @@ inventoryRoutes.post('/new', (req, res) => {
 });
 
 // new item
-inventoryRoutes.post('/item/new', (req, res) => {
+inventoryRoutes.post('/item/new', auth, (req, res) => {
   const {
     inventoryId,
     catId,
@@ -74,7 +74,7 @@ inventoryRoutes.post('/item/new', (req, res) => {
 });
 
 // delete item
-inventoryRoutes.delete('/item/delete', (req, res) => {
+inventoryRoutes.delete('/item/delete', auth, (req, res) => {
   const {inventoryId, catId, itemId} = req.body;
   Inventory.findById(inventoryId)
     .then(inventory => {
@@ -132,7 +132,7 @@ inventoryRoutes.patch('/item/modify', auth, (req, res) => {
 });
 
 // find all categories available
-inventoryRoutes.get('/:inventoryId/category/all', (req, res) => {
+inventoryRoutes.get('/:inventoryId/category/all', auth, (req, res) => {
   const {inventoryId} = req.params;
   Inventory.findById(inventoryId)
     .then(inventory => {

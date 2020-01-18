@@ -31,20 +31,25 @@ function ModifyItemForm(props) {
       content: 'CANNOT UNDO',
       onOk() {
         customAxios
-          .patch('inventory/item/modify', {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${user.token}`,
+          .patch(
+            'inventory/item/modify',
+            {
+              data: {
+                inventoryId: user.inventoryId,
+                catId: props.record.catId,
+                itemId: props.record.itemId,
+                newItemName,
+                newItemDescription,
+                newItemQuantity: newItemQty,
+              },
             },
-            data: {
-              inventoryId: user.inventoryId,
-              catId: props.record.catId,
-              itemId: props.record.itemId,
-              newItemName,
-              newItemDescription,
-              newItemQuantity: newItemQty,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${user.token}`,
+              },
             },
-          })
+          )
           .then(res => {
             if (res.status === 200) {
               message.success(`Successfully modified ${newItemName}!`);

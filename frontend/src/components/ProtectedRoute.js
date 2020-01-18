@@ -27,15 +27,18 @@ function ProtectedRoute(props) {
               res.data.email,
               res.data.inventoryId,
             );
+          } else {
+            resetUser();
           }
           setIsLoading(false);
         })
         .catch(err => {
-            console.log(err)
-            setIsLoading(false);
+          console.log(err);
+          resetUser();
+          setIsLoading(false);
         });
     } else {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   }, []);
 

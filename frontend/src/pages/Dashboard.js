@@ -18,7 +18,9 @@ function Dashboard(props) {
 
   useEffect(() => {
     customAxios
-      .get(`inventory/${user.inventoryId}/category/all`)
+      .get(`inventory/${user.inventoryId}/category/all`, {
+        headers: {Authorization: `Bearer ${user.token}`},
+      })
       .then(res => {
         const catArr = res.data.categories;
         const temp = [];
@@ -55,7 +57,10 @@ function Dashboard(props) {
         setIsDeleting(true);
         customAxios
           .delete('inventory/item/delete', {
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+            },
             data: {
               inventoryId: user.inventoryId,
               catId,

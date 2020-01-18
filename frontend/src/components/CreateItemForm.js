@@ -27,7 +27,9 @@ function CreateItemForm(props) {
 
   useEffect(() => {
     customAxios
-      .get(`inventory/${user.inventoryId}/category/all`)
+      .get(`inventory/${user.inventoryId}/category/all`, {
+        headers: {Authorization: `Bearer ${user.token}`},
+      })
       .then(res => {
         const categories = res.data.categories;
         setCatArr(categories);
@@ -43,17 +45,25 @@ function CreateItemForm(props) {
     if (category === 'other') {
       // new category
       customAxios
-        .post('inventory/item/new', {
-          headers: {'Content-Type': 'application/json'},
-          data: {
-            inventoryId: user.inventoryId,
-            categoryName: newCategoryName,
-            categoryDescription: newCategoryDescription,
-            itemName,
-            itemDescription,
-            itemQuantity,
+        .post(
+          'inventory/item/new',
+          {
+            data: {
+              inventoryId: user.inventoryId,
+              categoryName: newCategoryName,
+              categoryDescription: newCategoryDescription,
+              itemName,
+              itemDescription,
+              itemQuantity,
+            },
           },
-        })
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+            },
+          },
+        )
         .then(res => {
           if (res.status === 200) {
             setIsSuccessful(true);
@@ -65,16 +75,24 @@ function CreateItemForm(props) {
         .catch(err => console.log(err));
     } else {
       customAxios
-        .post('inventory/item/new', {
-          headers: {'Content-Type': 'application/json'},
-          data: {
-            inventoryId: user.inventoryId,
-            catId: category,
-            itemName,
-            itemDescription,
-            itemQuantity,
+        .post(
+          'inventory/item/new',
+          {
+            data: {
+              inventoryId: user.inventoryId,
+              catId: category,
+              itemName,
+              itemDescription,
+              itemQuantity,
+            },
           },
-        })
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+            },
+          },
+        )
         .then(res => {
           if (res.status === 200) {
             setIsSuccessful(true);
