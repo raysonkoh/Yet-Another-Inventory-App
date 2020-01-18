@@ -55,6 +55,7 @@ authRoutes.post('/verify', (req, res) => {
         msg: 'User verified!',
         name: decoded.data.name,
         email: decoded.data.email,
+        inventoryId: decoded.data.inventoryId,
         token,
       });
     } else {

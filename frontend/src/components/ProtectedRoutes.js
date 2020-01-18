@@ -1,10 +1,9 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {Redirect} from 'react-router-dom';
 import {UserContext} from '../contexts/UserContext';
 
 function ProtectedRoutes(props) {
   const [user, customSetUser] = useContext(UserContext);
-
   return user.token ? props.children : <Redirect to="/" />;
 }
 

@@ -23,7 +23,7 @@ function LoginPage(props) {
         })
         .then(res => {
           if (res.status === 200) {
-              customSetUser(res.data.token, res.data.name, res.data.email);
+              customSetUser(res.data.token, res.data.name, res.data.email, res.data.inventoryId);
               setIsVerified(true);
           } 
         })
