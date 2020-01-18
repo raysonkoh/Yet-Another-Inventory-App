@@ -6,12 +6,7 @@ const port = process.env.PORT || 5000;
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const authRoutes = require('./routes/authRoutes');
 
-let mongoURI;
-if (process.env.NODE_ENV === 'production') {
-    mongoURI = process.env.mongoURI;
-} else {
-    mongoURI = require('./config/keys').mongoURI;
-}
+mongoURI = process.env.MONGOURI;
 
 mongoose
   .connect(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -25,12 +20,10 @@ app.use(cors());
 app.use('/auth', authRoutes);
 app.use('/inventory', inventoryRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
-  });
-}
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
 
 app.listen(port, () => console.log(`Server started at port ${port}!`));
