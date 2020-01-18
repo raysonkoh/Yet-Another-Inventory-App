@@ -1,4 +1,3 @@
-//TODO: ADD AUTH MIDDLEWARE FOR EACH ROUTE
 const express = require('express');
 const inventoryRoutes = express.Router();
 const Inventory = require('../models/Inventory');

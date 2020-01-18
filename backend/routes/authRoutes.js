@@ -3,7 +3,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const authRoutes = express.Router();
 const User = require('../models/User');
-const jwtSecret = require('../config/keys').jwtSecret;
+let jwtSecret;
+if (process.env.NODE__ENV === 'production') {
+    jwtSecret = process.env.jwtSecret;
+} else {
+    jwtSecret = require('../config/keys').jwtSecret;
+}
 const customAxios = require('../helper/customAxios');
 
 authRoutes.post('/login', (req, res) => {

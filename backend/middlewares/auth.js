@@ -1,5 +1,11 @@
 const jwt = require('jsonwebtoken');
-const jwtSecret = require('../config/keys').jwtSecret;
+let jwtSecret;
+
+if (process.env.NODE__ENV === 'production') {
+    jwtSecret = process.env.jwtSecret;
+} else {
+    jwtSecret = require('../config/keys').jwtSecret;
+}
 
 function auth(req, res, next) {
   const token = req.headers.authorization.split(' ')[1];
