@@ -9,6 +9,7 @@ export function UserProvider(props) {
     email: null,
     token: null,
     inventoryId: null,
+    verified: null,
   });
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export function UserProvider(props) {
         .post('auth/verify', {
           headers: {'Content-Type': 'application/json'},
           data: {
-            token
+            token,
           },
         })
         .then(res => {
@@ -28,6 +29,15 @@ export function UserProvider(props) {
               name: res.data.name,
               email: res.data.email,
               inventoryId: res.data.inventoryId,
+              verified: true,
+            });
+          } else {
+            setUser({
+              token: res.data.token,
+              name: res.data.name,
+              email: res.data.email,
+              inventoryId: res.data.inventoryId,
+              verified: false,
             });
           }
         })
@@ -35,13 +45,14 @@ export function UserProvider(props) {
     }
   }, [user.token]);
 
-  const customSetUser = (token, name, email, inventoryId) => {
+  const customSetUser = (token, name, email, inventoryId, verified) => {
     localStorage.setItem('token', token);
     const newUser = {
       inventoryId,
       name,
       email,
       token,
+      verified,
     };
     setUser(newUser);
   };

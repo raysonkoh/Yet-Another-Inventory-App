@@ -6,7 +6,6 @@ import {UserContext} from '../contexts/UserContext';
 
 function LoginPage(props) {
   const [user, customSetUser] = useContext(UserContext);
-  const [isVerified, setIsVerified] = useState(false);
   const [tokenLocal, setTokenLocal] = useState(localStorage.getItem('token'));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,9 +22,14 @@ function LoginPage(props) {
         })
         .then(res => {
           if (res.status === 200) {
-              customSetUser(res.data.token, res.data.name, res.data.email, res.data.inventoryId);
-              setIsVerified(true);
-          } 
+            customSetUser(
+              res.data.token,
+              res.data.name,
+              res.data.email,
+              res.data.inventoryId,
+              true,
+            );
+          }
         })
         .catch(err => console.log(err));
     }
@@ -43,7 +47,7 @@ function LoginPage(props) {
       .then(res => {
         if (res.status === 200) {
           const {token, name, email, inventoryId} = res.data;
-          customSetUser(token, name, email, inventoryId);
+          customSetUser(token, name, email, inventoryId, true);
           console.log('login success');
           history.push('/dashboard');
         } else {
@@ -53,7 +57,7 @@ function LoginPage(props) {
       .catch(err => console.log(err));
   };
 
-  return isVerified ? (
+  return user.verified ? (
     <Redirect to="/dashboard" />
   ) : (
     <Form style={{padding: '15em'}}>
