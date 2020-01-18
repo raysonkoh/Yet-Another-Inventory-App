@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Form, Input, Drawer, Modal, Button, Table, Divider} from 'antd';
+import {Modal, Button, Table, Divider} from 'antd';
 import {UserContext} from '../contexts/UserContext';
 import customAxios from '../helpers/customAxios';
 import CreateItemForm from '../components/CreateItemForm';
@@ -15,6 +15,33 @@ function Dashboard(props) {
     record: null,
   });
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    customAxios
+      .get(`inventory/${user.inventoryId}/category/all`)
+      .then(res => {
+        const catArr = res.data.categories;
+        const temp = [];
+        let index = 0;
+        catArr.forEach(cat => {
+          const {items, name} = cat;
+          items.forEach(item => {
+            temp.push({
+              key: index,
+              name: item.name,
+              itemDescription: item.description,
+              itemQty: item.quantity,
+              category: name,
+              catId: cat._id,
+              itemId: item._id,
+            });
+            index++;
+          });
+        });
+        setData(temp);
+      })
+      .catch(err => console.log(err));
+  }, [displayCreateForm, isDeleting, currentlyModifying, user.inventoryId]);
 
   const onClickDelete = (e, itemId, catId, name) => {
     const {confirm} = Modal;
@@ -105,33 +132,6 @@ function Dashboard(props) {
     },
   ];
 
-  useEffect(() => {
-    customAxios
-      .get(`inventory/${user.inventoryId}/category/all`)
-      .then(res => {
-        const catArr = res.data.categories;
-        const temp = [];
-        let index = 0;
-        catArr.forEach(cat => {
-          const {items, name} = cat;
-          items.forEach(item => {
-            temp.push({
-              key: index,
-              name: item.name,
-              itemDescription: item.description,
-              itemQty: item.quantity,
-              category: name,
-              catId: cat._id,
-              itemId: item._id,
-            });
-            index++;
-          });
-        });
-        setData(temp);
-      })
-      .catch(err => console.log(err));
-  }, [displayCreateForm, isDeleting, currentlyModifying, user.inventoryId]);
-
   return (
     <div>
       <NavBar />
@@ -160,7 +160,7 @@ function Dashboard(props) {
           <ModifyItemForm
             record={currentlyModifying.record}
             visible={currentlyModifying.isModifying}
-            onClose={e => {
+            clearAll={() => {
               const newObj = {
                 isModifying: false,
                 record: null,

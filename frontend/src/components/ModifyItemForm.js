@@ -1,17 +1,18 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Alert, Modal, Button, Form, Drawer, InputNumber, Input} from 'antd';
+import {message, Modal, Button, Form, Drawer, InputNumber, Input} from 'antd';
 import customAxios from '../helpers/customAxios';
 import {UserContext} from '../contexts/UserContext';
 
 function ModifyItemForm(props) {
   const [user, customSetUser] = useContext(UserContext);
+  //const [visible, setVisible] = useState(false);
   const [newItemName, setNewItemName] = useState('');
   const [newItemDescription, setNewItemDescription] = useState('');
   const [newItemQty, setNewItemQty] = useState(-1);
-  const [isSuccess, setIsSuccess] = useState(null);
 
   useEffect(() => {
     if (props.record !== null) {
+      //setVisible(props.visible);
       setNewItemName(props.record.name);
       setNewItemDescription(props.record.itemDescription);
       setNewItemQty(props.record.itemQty);
@@ -45,9 +46,10 @@ function ModifyItemForm(props) {
           })
           .then(res => {
             if (res.status === 200) {
-              setIsSuccess(true);
+              message.success(`Successfully modified ${newItemName}!`);
+              props.clearAll();
             } else {
-              setIsSuccess(false);
+              message.error('An Error has occurred. Please try again');
             }
           })
           .catch(err => console.log(err));
@@ -62,17 +64,8 @@ function ModifyItemForm(props) {
     <Drawer
       title={title}
       visible={props.visible}
-      onClose={props.onClose}
+      onClose={props.clearAll}
       width="35%">
-      {(isSuccess && (
-        <Alert type="success" message="Successfully modified item" />
-      )) ||
-        (isSuccess === false && (
-          <Alert
-            type="error"
-            message="An error has occurred. Please try again."
-          />
-        ))}
       <Form>
         <Form.Item label="Item Name">
           <Input
