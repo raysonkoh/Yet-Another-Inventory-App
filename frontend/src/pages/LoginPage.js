@@ -5,35 +5,10 @@ import customAxios from '../helpers/customAxios';
 import {UserContext} from '../contexts/UserContext';
 
 function LoginPage(props) {
-  const [user, customSetUser] = useContext(UserContext);
-  const [tokenLocal, setTokenLocal] = useState(localStorage.getItem('token'));
+  const [user, customSetUser, resetUser] = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
-
-  useEffect(() => {
-    if (tokenLocal !== null) {
-      customAxios
-        .post('auth/verify', {
-          headers: {'Content-Type': 'application/json'},
-          data: {
-            token: tokenLocal,
-          },
-        })
-        .then(res => {
-          if (res.status === 200) {
-            customSetUser(
-              res.data.token,
-              res.data.name,
-              res.data.email,
-              res.data.inventoryId,
-              true,
-            );
-          }
-        })
-        .catch(err => console.log(err));
-    }
-  }, [tokenLocal]);
 
   const submitLogin = e => {
     customAxios
@@ -47,7 +22,8 @@ function LoginPage(props) {
       .then(res => {
         if (res.status === 200) {
           const {token, name, email, inventoryId} = res.data;
-          customSetUser(token, name, email, inventoryId, true);
+          //localStorage.setItem('token', token);
+          customSetUser(token, name, email, inventoryId);
           console.log('login success');
           history.push('/dashboard');
         } else {
@@ -57,7 +33,7 @@ function LoginPage(props) {
       .catch(err => console.log(err));
   };
 
-  return user.verified ? (
+  return user.token ? (
     <Redirect to="/dashboard" />
   ) : (
     <Form style={{padding: '15em'}}>

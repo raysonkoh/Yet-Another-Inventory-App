@@ -5,9 +5,8 @@ import {UserContext} from '../contexts/UserContext';
 const {Option} = Select;
 
 function CreateItemForm(props) {
-  const [user, customSetUser] = useContext(UserContext);
+  const [user, customSetUser, resetUser] = useContext(UserContext);
   const [catArr, setCatArr] = useState([]);
-  const [addNewCategory, setAddNewCategory] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(null);
 
   const [category, setCategory] = useState('');

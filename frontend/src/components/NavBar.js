@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Link, useHistory} from 'react-router-dom';
+import {UserContext} from '../contexts/UserContext';
 import {Button, Menu, Icon} from 'antd';
 
 function NavBar(props) {
+  const [user, customSetUser, resetUser] = useContext(UserContext);
   const history = useHistory();
   const [current, setCurrent] = useState(history.location.pathname);
 
   const onLogout = e => {
-    localStorage.removeItem('token');
+    resetUser();
     history.push('/');
   };
 

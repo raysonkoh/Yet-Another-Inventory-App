@@ -4,7 +4,7 @@ import customAxios from '../helpers/customAxios';
 import {UserContext} from '../contexts/UserContext';
 
 function ModifyItemForm(props) {
-  const [user, customSetUser] = useContext(UserContext);
+  const [user, customSetUser, resetUser] = useContext(UserContext);
   const [newItemName, setNewItemName] = useState('');
   const [newItemDescription, setNewItemDescription] = useState('');
   const [newItemQty, setNewItemQty] = useState(-1);
