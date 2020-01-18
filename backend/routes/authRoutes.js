@@ -7,12 +7,14 @@ const jwtSecret = process.env.JWTSECRET;
 const customAxios = require('../helper/customAxios');
 
 authRoutes.post('/login', (req, res) => {
+    console.log(req.body.data);
   const {email, password} = req.body.data;
   User.findOne({email: email})
     .then(user => {
       if (user) {
         bcrypt.compare(password, user.password, (err, result) => {
           if (result) {
+              console.log(result);
             const token = jwt.sign(
               {
                 data: {
@@ -67,8 +69,8 @@ authRoutes.post('/verify', (req, res) => {
 });
 
 authRoutes.post('/register', (req, res) => {
+    console.log(req.body.data);
   const {name, email, password} = req.body.data;
-
   customAxios
     .post('/inventory/new', {
       headers: {'Content-Type': 'application/json'},
