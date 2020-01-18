@@ -42,8 +42,8 @@ function LoginPage(props) {
       })
       .then(res => {
         if (res.status === 200) {
-          const {token, name, email} = res.data;
-          customSetUser(token, name, email);
+          const {token, name, email, inventoryId} = res.data;
+          customSetUser(token, name, email, inventoryId);
           console.log('login success');
           history.push('/dashboard');
         } else {

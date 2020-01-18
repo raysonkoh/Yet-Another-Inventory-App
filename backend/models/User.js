@@ -14,6 +14,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  inventoryId: {
+    type: String,
+    required: true,
+  },
 });
 
 const User = mongoose.model('user', UserSchema);

@@ -1,8 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Alert, Modal, Button, Form, Drawer, InputNumber, Input} from 'antd';
 import customAxios from '../helpers/customAxios';
+import {UserContext} from '../contexts/UserContext';
 
 function ModifyItemForm(props) {
+  const [user, customSetUser] = useContext(UserContext);
   const [newItemName, setNewItemName] = useState('');
   const [newItemDescription, setNewItemDescription] = useState('');
   const [newItemQty, setNewItemQty] = useState(-1);
@@ -30,14 +32,15 @@ function ModifyItemForm(props) {
       content: 'CANNOT UNDO',
       onOk() {
         customAxios
-          .patch('inventory/category/modify', {
+          .patch('inventory/item/modify', {
             headers: {'Content-Type': 'application/json'},
             data: {
+              inventoryId: user.inventoryId,
+              catId: props.record.catId,
+              itemId: props.record.itemId,
               newItemName,
               newItemDescription,
-              newItemQty,
-              itemId: props.record.itemId,
-              catId: props.record.catId,
+              newItemQuantity: newItemQty,
             },
           })
           .then(res => {

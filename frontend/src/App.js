@@ -18,9 +18,9 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={LoginPage} />
+          <Route exact path="/register" component={RegisterPage} />
           <ProtectedRoutes>
             <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/register" component={RegisterPage} />
             <Route exact path="/search" component={SearchPage} />
             <Route exact path="/admin" component={AdminPage} />
           </ProtectedRoutes>

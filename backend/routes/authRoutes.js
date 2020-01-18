@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const authRoutes = express.Router();
 const User = require('../models/User');
 const jwtSecret = require('../config/keys').jwtSecret;
+const customAxios = require('../helper/customAxios');
 
 authRoutes.post('/login', (req, res) => {
   const {email, password} = req.body.data;
@@ -18,6 +19,7 @@ authRoutes.post('/login', (req, res) => {
                   userid: user._id,
                   name: user.name,
                   email: user.email,
+                  inventoryId: user.inventoryId,
                 },
               },
               jwtSecret,
@@ -27,6 +29,7 @@ authRoutes.post('/login', (req, res) => {
               msg: 'Found user',
               name: user.name,
               email: user.email,
+              inventoryId: user.inventoryId,
               token,
             });
           } else {
@@ -64,34 +67,43 @@ authRoutes.post('/verify', (req, res) => {
 
 authRoutes.post('/register', (req, res) => {
   const {name, email, password} = req.body.data;
-  const newUser = new User({
-    name,
-    email,
-    password,
-  });
 
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) console.log(err);
-    bcrypt.hash(newUser.password, salt, (err, hash) => {
-      if (err) console.log(err);
-      newUser.password = hash;
-      newUser
-        .save()
-        .then(user => {
-          if (user) {
-            res.status(200).json({
-              msg: 'Successfully created new user!',
-              user,
-            });
-          } else {
-            res.status(400).json({
-              msg: 'Invalid inputs, please try again',
-            });
-          }
-        })
-        .catch(err => console.log(err));
-    });
-  });
+  customAxios
+    .post('/inventory/new', {
+      headers: {'Content-Type': 'application/json'},
+      data: {
+        inventoryName: `${name} inventory`,
+      },
+    })
+    .then(response => {
+      const inventoryId = response.data.invt._id;
+      const newUser = new User({
+        name,
+        email,
+        password,
+        inventoryId,
+      });
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) console.log(err);
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) console.log(err);
+          newUser.password = hash;
+          newUser.save().then(user => {
+            if (user) {
+              res.status(200).json({
+                msg: 'Successfully created new user!',
+                user,
+              });
+            } else {
+              res.status(400).json({
+                msg: 'Invalid inputs, please try again',
+              });
+            }
+          });
+        });
+      });
+    })
+    .catch(err => console.log(err));
 });
 
 module.exports = authRoutes;

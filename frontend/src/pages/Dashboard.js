@@ -27,11 +27,12 @@ function Dashboard(props) {
       onOk() {
         setIsDeleting(true);
         customAxios
-          .delete('inventory/category/delete', {
+          .delete('inventory/item/delete', {
             headers: {'Content-Type': 'application/json'},
             data: {
-              itemId,
+              inventoryId: user.inventoryId,
               catId,
+              itemId,
             },
           })
           .then(res => {
@@ -106,14 +107,14 @@ function Dashboard(props) {
 
   useEffect(() => {
     customAxios
-      .get('inventory/category/all')
+      .get(`inventory/${user.inventoryId}/category/all`)
       .then(res => {
-        const catArr = res.data.catArr;
+        const catArr = res.data.categories;
         const temp = [];
         let index = 0;
         catArr.forEach(cat => {
-          const {itemArr, name} = cat;
-          itemArr.forEach(item => {
+          const {items, name} = cat;
+          items.forEach(item => {
             temp.push({
               key: index,
               name: item.name,
@@ -129,7 +130,7 @@ function Dashboard(props) {
         setData(temp);
       })
       .catch(err => console.log(err));
-  }, [displayCreateForm, isDeleting, currentlyModifying]);
+  }, [displayCreateForm, isDeleting, currentlyModifying, user.inventoryId]);
 
   return (
     <div>

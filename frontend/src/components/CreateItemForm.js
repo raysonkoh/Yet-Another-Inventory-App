@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Alert, Button, Divider, Form, Input, InputNumber, Select} from 'antd';
 import customAxios from '../helpers/customAxios';
+import {UserContext} from '../contexts/UserContext';
 const {Option} = Select;
 
 function CreateItemForm(props) {
+  const [user, customSetUser] = useContext(UserContext);
   const [catArr, setCatArr] = useState([]);
   const [addNewCategory, setAddNewCategory] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(null);
@@ -26,21 +28,26 @@ function CreateItemForm(props) {
 
   useEffect(() => {
     customAxios
-      .get('inventory/category/all')
-      .then(res => setCatArr(res.data.catArr))
+      .get(`inventory/${user.inventoryId}/category/all`)
+      .then(res => {
+        const categories = res.data.categories;
+        setCatArr(categories);
+      })
       .catch(err => console.log(err));
   }, []);
 
   const renderOptions = cat => {
-    return <Option value={cat.name}>{cat.name}</Option>;
+    return <Option value={cat._id}>{cat.name}</Option>;
   };
 
   const onSubmit = e => {
     if (category === 'other') {
+      // new category
       customAxios
-        .post('inventory/category/new', {
+        .post('inventory/item/new', {
           headers: {'Content-Type': 'application/json'},
           data: {
+            inventoryId: user.inventoryId,
             categoryName: newCategoryName,
             categoryDescription: newCategoryDescription,
             itemName,
@@ -58,19 +65,12 @@ function CreateItemForm(props) {
         })
         .catch(err => console.log(err));
     } else {
-      let catId;
-      for (let i = 0; i < catArr.length; i++) {
-        if (catArr[i].name === category) {
-          catId = catArr[i]._id;
-          break;
-        }
-      }
-
       customAxios
         .post('inventory/item/new', {
           headers: {'Content-Type': 'application/json'},
           data: {
-            catId,
+            inventoryId: user.inventoryId,
+            catId: category,
             itemName,
             itemDescription,
             itemQuantity,
