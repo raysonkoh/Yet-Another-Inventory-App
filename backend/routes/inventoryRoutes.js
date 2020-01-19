@@ -2,15 +2,12 @@ const express = require('express');
 const inventoryRoutes = express.Router();
 const Inventory = require('../models/Inventory');
 const auth = require('../middlewares/auth');
+const saveNewInventory = require('../helper/saveNewInventory');
 
 // new inventory
 inventoryRoutes.post('/new', (req, res) => {
   const {inventoryName} = req.body.data;
-  const newInventory = new Inventory({
-    name: inventoryName,
-  });
-  newInventory
-    .save()
+  saveNewInventory(inventoryName)
     .then(invt =>
       res.status(200).json({
         msg: 'Successfully saved new inventory!',

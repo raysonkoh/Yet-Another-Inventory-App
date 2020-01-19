@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const authRoutes = express.Router();
 const User = require('../models/User');
 const jwtSecret = process.env.JWTSECRET;
-const customAxios = require('../helper/customAxios');
+const saveNewInventory = require('../helper/saveNewInventory');
 
 authRoutes.post('/login', (req, res) => {
   const {email, password} = req.body.data;
@@ -68,15 +68,9 @@ authRoutes.post('/verify', (req, res) => {
 
 authRoutes.post('/register', (req, res) => {
   const {name, email, password} = req.body.data;
-  customAxios
-    .post('/inventory/new', {
-      headers: {'Content-Type': 'application/json'},
-      data: {
-        inventoryName: `${name} inventory`,
-      },
-    })
-    .then(response => {
-      const inventoryId = response.data.invt._id;
+  saveNewInventory(`${name} inventory`)
+    .then(invt => {
+      const inventoryId = invt._id;
       const newUser = new User({
         name,
         email,
