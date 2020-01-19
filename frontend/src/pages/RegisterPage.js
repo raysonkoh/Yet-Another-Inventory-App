@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {Form, Icon, Input, Button, Checkbox} from 'antd';
+import {message, Form, Icon, Input, Button} from 'antd';
 import customAxios from '../helpers/customAxios';
 
 function RegisterPage(props) {
@@ -21,9 +21,11 @@ function RegisterPage(props) {
       .then(res => {
         if (res.status === 200) {
           console.log('register success');
+          message.success('Successfully registered account!');
           props.history.push('/');
         } else {
           console.log('register failed');
+          message.error('An error occured during registraton. Please try again.');
         }
       })
       .catch(err => console.log(err));

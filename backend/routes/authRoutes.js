@@ -3,13 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const authRoutes = express.Router();
 const User = require('../models/User');
-let jwtSecret;
-if (process.env.NODE__ENV === 'production') {
-    jwtSecret = process.env.jwtSecret;
-} else {
-    jwtSecret = require('../config/keys').jwtSecret;
-}
-const customAxios = require('../helper/customAxios');
+const jwtSecret = require('../config/keys').jwtSecret;
+const saveNewInventory = require('../helpers/saveNewInventory');
 
 authRoutes.post('/login', (req, res) => {
   const {email, password} = req.body.data;
@@ -73,16 +68,9 @@ authRoutes.post('/verify', (req, res) => {
 
 authRoutes.post('/register', (req, res) => {
   const {name, email, password} = req.body.data;
-
-  customAxios
-    .post('/inventory/new', {
-      headers: {'Content-Type': 'application/json'},
-      data: {
-        inventoryName: `${name} inventory`,
-      },
-    })
-    .then(response => {
-      const inventoryId = response.data.invt._id;
+  saveNewInventory(`${name} inventory`)
+    .then(invt => {
+      const inventoryId = invt._id;
       const newUser = new User({
         name,
         email,
