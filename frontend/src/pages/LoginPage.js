@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Link, useHistory, Redirect} from 'react-router-dom';
-import {Form, Icon, Input, Button, Checkbox} from 'antd';
+import {message, Form, Icon, Input, Button} from 'antd';
 import customAxios from '../helpers/customAxios';
 import {UserContext} from '../contexts/UserContext';
 
@@ -24,9 +24,11 @@ function LoginPage(props) {
           const {token, name, email, inventoryId} = res.data;
           customSetUser(token, name, email, inventoryId);
           console.log('login success');
+          message.success('Successfully Logged in!');
           history.push('/dashboard');
         } else {
           console.log('login failed');
+          message.error('Login Failed. Please try again.');
         }
       })
       .catch(err => console.log(err));
