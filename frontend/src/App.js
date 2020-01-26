@@ -9,10 +9,6 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
 function App() {
-  useEffect(() => {
-    document.title = "RAY' AWESOME INVENTORY";
-  }, []);
-
   return (
     <UserProvider>
       <BrowserRouter>
